@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>فريق الأبطال: رحلة تطور التكنولوجيا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#120a2e; --bg2:#0d0724; --panel:#1c1440; --panel2:#241a52; --fire:#2f6bff; --gold:#ffd166; --scale:#37e0a0; --ink:#fff3e6; --muted:#c9b8c2; --red:#ff4d5e; --blue:#4fb0ff;}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{margin:0; min-height:100%; background:radial-gradient(1200px 700px at 85% -10%,#3a2586 0%,var(--bg) 45%,var(--bg2) 100%); color:var(--ink); font-family:'Baloo Bhaijaan 2','Segoe UI',sans-serif;
+ padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px); overflow-x:hidden;}
+.wrap{max-width:860px; margin:0 auto; padding:18px 16px 70px;}
+.side-hero{position:fixed; top:50%; transform:translateY(-50%); width:160px; text-align:center; z-index:3; display:none;}
+.side-hero.left{left:16px;} .side-hero.right{right:16px;}
+.side-hero .float{animation:floaty 3.2s ease-in-out infinite;}
+.side-hero .hero-emoji{font-size:92px; filter:drop-shadow(0 10px 16px rgba(0,0,0,.55));}
+@keyframes floaty{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+.banner{margin-top:2px; background:linear-gradient(135deg,var(--gold),var(--fire)); color:#1a0e10; font-weight:800; font-size:12.5px; line-height:1.5; padding:10px 8px; border-radius:12px; box-shadow:0 8px 18px rgba(0,0,0,.45); border:2px solid #1a0e10;}
+@media (min-width:1280px){ .side-hero{display:block;} }
+.topbar{position:sticky; top:env(safe-area-inset-top,0px); z-index:6; background:rgba(14,10,20,.92); backdrop-filter:blur(8px); padding:12px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid var(--fire); box-shadow:0 4px 18px rgba(0,0,0,.35); gap:8px; flex-wrap:wrap;}
+.topbar h1{font-size:15px; margin:0; display:flex; gap:6px; align-items:center; white-space:nowrap; letter-spacing:.3px;}
+.card{position:relative;}
+.card:before{content:''; position:absolute; top:0; right:24px; left:24px; height:3px; background:linear-gradient(90deg,var(--fire),var(--gold)); border-radius:0 0 6px 6px;}
+.stats{display:flex; gap:10px; align-items:center; font-size:14px;}
+.hearts,.gems{display:flex; gap:2px; align-items:center; background:var(--panel2); border:1px solid #52242f; border-radius:999px; padding:4px 10px;}
+.audioBtn{background:var(--panel2); border:1px solid #52242f; border-radius:999px; padding:6px 10px; cursor:pointer; color:var(--ink); font-size:15px;}
+.audioBtn.on{border-color:var(--gold); box-shadow:0 0 8px rgba(255,209,102,.6);}
+.dots{display:flex; gap:7px; justify-content:center; margin:16px 0 10px;}
+.dot{width:11px; height:11px; border-radius:50%; background:#4a2a30;}
+.dot.active{background:var(--fire); box-shadow:0 0 0 4px rgba(255,106,61,.25);}
+.dot.done{background:var(--scale);}
+.card{background:linear-gradient(180deg,var(--panel),var(--panel2)); border:1px solid #52242f; border-radius:22px; padding:22px; margin-bottom:16px; box-shadow:0 14px 30px -18px rgba(0,0,0,.7);}
+h2{font-size:21px; margin:0 0 6px;}
+p.lead{color:var(--muted); font-size:15px; line-height:1.75; margin:0 0 14px;}
+.badge{display:inline-block; background:rgba(255,106,61,.18); color:var(--fire); border:1px solid rgba(255,106,61,.45); padding:4px 12px; border-radius:999px; font-size:13px; margin-bottom:10px;}
+.btn{appearance:none; border:none; cursor:pointer; font-family:inherit; font-weight:700; font-size:16px; border-radius:14px; padding:13px 22px; color:#1a0e10; background:var(--gold); box-shadow:0 8px 0 #b8933a; transition:transform .08s;}
+.btn:active{transform:translateY(6px); box-shadow:0 2px 0 #b8933a;}
+.btn.secondary{background:var(--panel2); color:var(--ink); box-shadow:0 8px 0 #10173a; border:1px solid #52242f;}
+.btn.secondary:active{box-shadow:0 2px 0 #10173a;}
+.btn[disabled]{opacity:.4; cursor:not-allowed;}
+.center{text-align:center;}
+.mascot{font-size:56px; line-height:1;}
+.goals{background:#1a0e18; border:1px dashed #52242f; border-radius:14px; padding:14px 16px; margin:14px 0;}
+.goals li{margin:6px 0; color:var(--muted);}
+.footer-nav{display:flex; justify-content:space-between; margin-top:16px;}
+.toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--panel2); border:1px solid var(--gold); color:var(--ink); padding:10px 18px; border-radius:999px; font-size:14px; opacity:0; pointer-events:none; transition:opacity .25s; z-index:20;}
+.toast.show{opacity:1;}
+.hidden{display:none !important;}
+input[type=text]{width:100%; padding:13px 16px; border-radius:12px; border:2px solid #52242f; background:#150c14; color:var(--ink); font-family:inherit; font-size:16px;}
+input[type=range]{width:100%; height:8px; border-radius:99px; background:#150c14; accent-color:var(--fire);}
+.years{display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-top:6px;}
+.scene{background:#150c14; border:1px solid #3a1c22; border-radius:16px; padding:20px; text-align:center; margin-bottom:14px;}
+.scene .emoji{font-size:50px;}
+.scene .era-name{font-weight:800; color:var(--gold); margin:8px 0 4px; font-size:16px;}
+.scene .era-desc{font-size:14px; line-height:1.7;}
+.scene .era-impact{margin-top:8px; font-size:13px; color:var(--muted); border-top:1px dashed #3a1c22; padding-top:8px;}
+.speakBtn{background:none; border:1px solid #52242f; color:var(--gold); border-radius:999px; padding:5px 12px; font-size:12px; cursor:pointer; margin-top:8px;}
+.chipbox{background:#150c14; border:1px solid #3a1c22; border-radius:16px; padding:20px; text-align:center; margin-bottom:14px;}
+.chipnum{font-size:28px; font-weight:800; color:var(--fire); direction:ltr;}
+.dotsgrid{display:flex; flex-wrap:wrap; justify-content:center; gap:3px; max-width:280px; margin:10px auto; min-height:60px;}
+.dotsgrid span{width:6px; height:6px; border-radius:50%; background:var(--gold);}
+.city{background:#150c14; border:1px solid #3a1c22; border-radius:16px; padding:20px 10px; margin-bottom:14px; display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.hotspot{background:#241428; border:2px solid #52242f; border-radius:14px; padding:14px 6px; text-align:center; cursor:pointer; font-size:13px; transition:all .15s;}
+.hotspot .ic{font-size:26px; display:block; margin-bottom:4px;}
+.hotspot.on{border-color:var(--scale); background:rgba(55,224,160,.1);}
+.reveal{background:#1a0e18; border-right:4px solid var(--fire); border-radius:10px; padding:12px 14px; margin-top:10px; font-size:14px; color:var(--muted); line-height:1.7; display:none;}
+.reveal.show{display:block;}
+.lab-item{background:#150c14; border:1px solid #3a1c22; border-radius:16px; padding:16px; margin-bottom:14px;}
+.lab-item h3{margin:0 0 8px; font-size:15px; color:var(--gold);}
+.switch-row{display:flex; gap:8px; margin:10px 0; flex-wrap:wrap;}
+.switch-row button{flex:1;}
+.demo-out{background:#0e0a14; border-radius:12px; padding:12px; text-align:center; font-size:13.5px; min-height:50px; display:flex; align-items:center; justify-content:center; color:var(--muted);}
+.coin{width:68px; height:68px; border-radius:50%; background:var(--fire); color:#150c14; font-size:22px; font-weight:800; display:flex; align-items:center; justify-content:center; margin:8px auto; cursor:pointer;}
+.coin.spin{animation:spin 1s linear;}
+@keyframes spin{0%{transform:rotateY(0);}100%{transform:rotateY(1080deg);}}
+.q-box{background:#150c14; border:1px solid #3a1c22; border-radius:16px; padding:16px; margin-bottom:14px;}
+.opt{display:block; width:100%; text-align:right; background:#1a0e18; border:2px solid #3a1c22; border-radius:12px; padding:11px 14px; margin:7px 0; cursor:pointer; font-size:14.5px; font-family:inherit; color:var(--ink);}
+.opt.correct{border-color:var(--scale); background:rgba(55,224,160,.16);}
+.opt.wrong{border-color:var(--red); background:rgba(255,77,94,.16);}
+.opt[disabled]{cursor:default;}
+.mrow{display:flex; gap:8px; flex-wrap:wrap; margin:10px 0;}
+.chip{flex:1 1 45%; min-width:130px; background:#1a0e18; border:2px solid #3a1c22; border-radius:12px; padding:10px 8px; text-align:center; cursor:pointer; font-size:13px;}
+.chip.sel{border-color:var(--gold); background:rgba(255,209,102,.12);}
+.chip.ok{border-color:var(--scale); background:rgba(55,224,160,.14); opacity:.6; cursor:default;}
+.chip.bad{animation:shake .35s;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+.stars{font-size:40px; margin:14px 0;}
+textarea{width:100%; min-height:80px; border-radius:12px; border:2px solid #3a1c22; background:#150c14; color:var(--ink); padding:10px; font-family:inherit; font-size:14px;}
+#confetti{position:fixed; inset:0; pointer-events:none; z-index:50; overflow:hidden;}
+.piece{position:absolute; top:-20px; font-size:22px; animation:fall linear forwards;}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg); opacity:.2;}}
+.celebrate{position:fixed; inset:0; background:rgba(14,10,20,.85); z-index:40; display:flex; align-items:center; justify-content:center; text-align:center;}
+.celebrate .box{background:var(--panel); border:2px solid var(--gold); border-radius:20px; padding:30px 24px; max-width:340px;}
+.celebrate .icon{font-size:60px;}
+</style>
+</head>
+<body>
+<div id="confetti"></div>
+<div class="side-hero left"><div class="float"><div class="hero-emoji">🦸‍♂️</div></div><div class="banner">ذاكر يا بطل.. كل خطوة بتقرّبك للفهم أكتر! 💪🔥</div></div>
+<div class="side-hero right"><div class="float"><div class="hero-emoji" style="display:inline-block; transform:scaleX(-1);">🦸‍♀️</div></div><div class="banner">إنت جاهز تبقى نجم التكنولوجيا! ⭐🚀</div></div>
+<div class="topbar">
+  <h1>🦸 <span id="topName">الكابتن التقني</span></h1>
+  <div class="stats">
+    <div class="hearts" id="heartsBar"></div>
+    <div class="gems">💎 <span id="gemVal">0</span></div>
+    <button class="audioBtn" id="audioBtn" onclick="toggleAudio()">🔇</button>
+  </div>
+</div>
+<div class="wrap">
+  <div class="dots" id="dots"></div>
+
+  <!-- NAME ENTRY -->
+  <section id="s-name" class="card center">
+    <div class="mascot">🦸‍♂️🦸‍♀️</div>
+    <h2>إزيك! أنا الكابتن التقني</h2>
+    <p class="lead">قبل ما نبدأ رحلتنا في عالم التكنولوجيا، قولّي اسمك عشان أنادّيك بيه طول اللعبة.</p>
+    <input type="text" id="nameInput" placeholder="اكتب اسمك هنا...">
+    <div style="height:14px"></div>
+    <button class="btn" onclick="saveName()">يلا بينا 🔥</button>
+  </section>
+
+  <!-- INTRO -->
+  <section id="s-intro" class="card center hidden">
+    <div class="mascot">🦸✨</div>
+    <div class="badge">الدرس ١-١</div>
+    <h2 id="introTitle">تطوّر تكنولوجيا المعلومات والتحوّل الاجتماعي</h2>
+    <p class="lead" id="introLead">جاهز يا بطل؟ هنطير مع بعض عبر الزمن، ونفتح كنوز المعلومات، وهتكسب جواهر كل ما تعدي مرحلة صح. بس خد بالك.. لو غلطت هتخسر قلب، فركّز!</p>
+    <div class="goals">
+      <div style="color:var(--fire); font-weight:700; margin-bottom:6px;">هنعمل إيه سوا:</div>
+      <ul style="margin:0; padding-right:20px;">
+        <li>نطير عبر خط الزمن ونشوف تطور التكنولوجيا ومراحلها كاملة</li>
+        <li>نكتشف قانون مور وتحدياته بنفسنا</li>
+        <li>نستكشف كل التغيرات اللي حصلت في حياتنا اليومية</li>
+        <li>نجرّب معمل التقنيات الناشئة: القيادة الذاتية، AR، VR، والحوسبة الكمومية</li>
+      </ul>
+    </div>
+    <button class="btn" onclick="goTo(1)">ابدأ المغامرة 🚀</button>
+  </section>
+
+  <!-- STAGE 1: timeline -->
+  <section id="s-1" class="card hidden">
+    <div class="badge">المرحلة ١ من ٤ - خط الزمن</div>
+    <h2>🕰️ رحلة عبر الزمن</h2>
+    <p class="lead">حرّك المؤشر وشوف التكنولوجيا بتتطور قدامك.</p>
+    <div class="scene" id="scene1"></div>
+    <input type="range" id="slider1" min="0" max="4" step="1" value="0" oninput="onSlide(this.value)">
+    <div class="years"><span>الأربعينيات</span><span>السبعينيات</span><span>التسعينيات</span><span>٢٠٠٠+</span><span>٢٠١٠+</span></div>
+    <div class="q-box hidden" id="orderQBox"></div>
+    <div class="footer-nav">
+      <span></span>
+      <button class="btn hidden" id="btn1show" onclick="showOrderQ()">التحدي! 🔥</button>
+    </div>
+  </section>
+
+  <!-- STAGE 2: moore -->
+  <section id="s-2" class="card hidden">
+    <div class="badge">المرحلة ٢ من ٤ - قانون مور</div>
+    <h2>⚡ معمل قانون مور</h2>
+    <p class="lead">في ١٩٧١ كان فيه حوالي ٢٣٠٠ ترانزستور بس في الشريحة. دوس وضاعف العدد كل عامين!</p>
+    <div class="chipbox">
+      <div class="chipnum" id="chipNum">2,300</div>
+      <div style="font-size:13px;color:var(--muted)">سنة: <span id="chipYear">1971</span></div>
+      <div class="dotsgrid" id="chipDots"></div>
+    </div>
+    <div class="center"><button class="btn" onclick="doubleChip()">💥 ضاعف الترانزستورات</button></div>
+    <p class="lead" id="mooreMsg" style="margin-top:10px;"></p>
+    <div class="q-box hidden" id="moore2Box"></div>
+    <div class="footer-nav">
+      <span></span>
+      <button class="btn hidden" id="btn2show" onclick="showMooreQ()">التحدي! 🔥</button>
+    </div>
+  </section>
+
+  <!-- STAGE 3: city + archive -->
+  <section id="s-3" class="card hidden">
+    <div class="badge">المرحلة ٣ من ٤ - المدينة الذكية</div>
+    <h2>🏙️ اكتشف المدينة الذكية</h2>
+    <p class="lead">دوس على كل نقطة واعرف التغيير اللي حصل في حياتنا.</p>
+    <div class="city" id="city"></div>
+    <div class="q-box hidden" id="cityQBox"></div>
+    <div class="footer-nav">
+      <span></span>
+      <button class="btn hidden" id="btn3show" onclick="showCityQ()">التحدي! 🔥</button>
+    </div>
+  </section>
+
+  <!-- STAGE 4: lab + classify -->
+  <section id="s-4" class="card hidden">
+    <div class="badge">المرحلة ٤ من ٤ - معمل المستقبل</div>
+    <h2>🧪 معمل التقنيات الناشئة</h2>
+    <div class="lab-item">
+      <h3>🚗 قيادة ذاتية: قرار سريع ولا بطيء؟</h3>
+      <div class="switch-row">
+        <button class="btn secondary" onclick="carDemo('edge')">قرار جوه العربية (طرفي)</button>
+        <button class="btn secondary" onclick="carDemo('cloud')">قرار من السحابة</button>
+      </div>
+      <div class="demo-out" id="carOut">دوس وشوف الفرق في السرعة!</div>
+    </div>
+    <div class="lab-item">
+      <h3>🕶️ الواقع المعزز (AR) والواقع الافتراضي (VR)</h3>
+      <div class="switch-row">
+        <button class="btn secondary" onclick="arvr('ar')">جرّب AR</button>
+        <button class="btn secondary" onclick="arvr('vr')">جرّب VR</button>
+      </div>
+      <div class="demo-out" id="arvrOut">اختار تقنية وشوف الفرق.</div>
+    </div>
+    <div class="lab-item">
+      <h3>🪙 الحوسبة الكمومية: البت ولا الكيوبت؟</h3>
+      <p class="lead" style="margin-bottom:6px;">الحوسبة الكمومية نهج بيستخدم خصائص ميكانيكا الكم، بيدّي قوة هائلة في مسائل معينة، لكنها مش بتسرّع كل أنواع الحسابات.</p>
+      <div class="switch-row">
+        <button class="btn secondary" onclick="flipCoin('bit')">بت عادي</button>
+        <button class="btn secondary" onclick="flipCoin('qubit')">كيوبت</button>
+      </div>
+      <div class="coin" id="coin">؟</div>
+      <div class="demo-out" id="coinOut">جرّب الاتنين وقارن.</div>
+    </div>
+    <div class="q-box hidden" id="labQBox"></div>
+    <div class="footer-nav">
+      <span></span>
+      <button class="btn hidden" id="btn4show" onclick="showLabQ()">التحدي الأخير! 🔥</button>
+    </div>
+  </section>
+
+  <!-- END -->
+  <section id="s-end" class="card center hidden">
+    <div class="mascot">🦸🏆</div>
+    <h2 id="endTitle">ألف مبروك يا بطل!</h2>
+    <p class="lead">خلّصت مهمة فريق الأبطال في تطور تكنولوجيا المعلومات.</p>
+    <p class="lead">جمعت <b id="finalGems">0</b> جوهرة، وفاضل معاك <b id="finalHearts">0</b> قلوب. 🎉</p>
+    <div class="stars">🏅🏅🏅🏅</div>
+    <button class="btn secondary" onclick="location.reload()">ابدأ من الأول 🔁</button>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+let stage=0, hearts=3, gems=0, audioOn=false, userName='';
+const totalStages=4;
+function toast(m){const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),1500);}
+function speak(txt){ if(!audioOn) return; try{ window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(txt); u.lang='ar-EG'; u.rate=0.95; window.speechSynthesis.speak(u); }catch(e){} }
+function toggleAudio(){ audioOn=!audioOn; const b=document.getElementById('audioBtn'); b.textContent=audioOn?'🔊':'🔇'; b.classList.toggle('on',audioOn); if(!audioOn){try{window.speechSynthesis.cancel();}catch(e){}} toast(audioOn?'الصوت اتشغل 🔊':'الصوت اتقفل 🔇'); }
+function renderHearts(){ document.getElementById('heartsBar').innerHTML = '❤️'.repeat(hearts)+'🖤'.repeat(3-hearts); }
+function addGem(n){ gems+=n; document.getElementById('gemVal').textContent=gems; }
+function loseHeart(){ if(hearts>0) hearts--; renderHearts(); }
+renderHearts();
+
+function saveName(){
+  const v=document.getElementById('nameInput').value.trim();
+  userName = v || 'بطل';
+  document.getElementById('topName').textContent = userName + ' 🦸';
+  document.getElementById('introTitle').textContent = 'يلا يا '+userName+'! تطوّر تكنولوجيا المعلومات والتحوّل الاجتماعي';
+  document.getElementById('s-name').classList.add('hidden');
+  document.getElementById('s-intro').classList.remove('hidden');
+  speak('إزيك يا '+userName+'! أنا الكابتن التقني. جاهز نبدأ مهمتنا؟');
+}
+
+function renderDots(){const d=document.getElementById('dots'); d.innerHTML='';
+  for(let i=1;i<=totalStages;i++){const s=document.createElement('div'); s.className='dot'+(i<stage?' done':(i===stage?' active':'')); d.appendChild(s);} }
+function goTo(n){
+  document.querySelectorAll('#s-intro,#s-1,#s-2,#s-3,#s-4,#s-end').forEach(e=>e.classList.add('hidden'));
+  stage=n; renderDots();
+  if(n<=totalStages) document.getElementById('s-'+n).classList.remove('hidden');
+  else { document.getElementById('endTitle').textContent='ألف مبروك يا '+userName+'! 🏆'; document.getElementById('finalGems').textContent=gems; document.getElementById('finalHearts').textContent=hearts; document.getElementById('s-end').classList.remove('hidden'); speak('ألف مبروك يا '+userName+'! خلصت مهمة فريق الأبطال بجدارة.'); }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function confettiBurst(){
+  const box=document.getElementById('confetti'); const items=['🎉','✨','💎','🔥','🦸','⭐'];
+  for(let i=0;i<26;i++){
+    const s=document.createElement('span'); s.className='piece'; s.textContent=items[Math.floor(Math.random()*items.length)];
+    s.style.left=Math.random()*100+'vw'; s.style.animationDuration=(1.4+Math.random()*1.2)+'s'; s.style.fontSize=(16+Math.random()*14)+'px';
+    box.appendChild(s); setTimeout(()=>s.remove(),2800);
+  }
+}
+function celebrate(msg,next){
+  confettiBurst();
+  const ov=document.createElement('div'); ov.className='celebrate';
+  ov.innerHTML=`<div class="box"><div class="icon">🦸⚡</div><h2>${msg}</h2><p class="lead">استعد للمرحلة اللي جاية يا ${userName}!</p><button class="btn">كمّل يا ${userName}</button></div>`;
+  ov.querySelector('button').onclick=()=>{ov.remove(); next();};
+  document.body.appendChild(ov);
+  speak(msg);
+}
+
+/* ---------- STAGE 1: timeline ---------- */
+const eras=[
+ {icon:'🖥️',name:'الأربعينيات - الستينيات',desc:'ظهر أول حاسوب إلكتروني (ENIAC) وكان الناس بتدخل له البيانات بصفائح مثقوبة.',impact:'استخدام أساسي للأغراض العسكرية والحسابات العلمية بس.'},
+ {icon:'💻',name:'السبعينيات - الثمانينيات',desc:'ظهر الحاسوب الشخصي (PC) وبدأ يدخل البيوت والمكاتب.',impact:'دي أول مرة الفرد العادي يستخدم حاسوب لنفسه.'},
+ {icon:'🌐',name:'التسعينيات',desc:'الإنترنت بقى متاح للاستخدام التجاري، وظهرت متصفحات الويب.',impact:'انتشار الوصول لمعلومات العالم كله والبريد الإلكتروني.'},
+ {icon:'📱',name:'العقد الأول من الألفية (٢٠٠٠+)',desc:'ظهرت الهواتف الذكية وتطبيقاتها زي الأيفون وغيره.',impact:'انتشار سريع جدًا لوسائل الاتصال عبر الموبايل.'},
+ {icon:'🤖',name:'العقد الثاني فصاعدًا (٢٠١٠+)',desc:'ظهر تحليل البيانات الضخمة والذكاء الاصطناعي والحوسبة السحابية.',impact:'موارد تكنولوجيا المعلومات بقت متوفرة كخدمات سحابية للجميع.'}
+];
+let visited=new Set();
+function onSlide(v){
+  const e=eras[v];
+  document.getElementById('scene1').innerHTML=`<div class="emoji">${e.icon}</div><div class="era-name">${e.name}</div><div class="era-desc">${e.desc}</div><div class="era-impact">📌 التأثير على المجتمع: ${e.impact}</div><button class="speakBtn" onclick="speak('${e.name}. ${e.desc} ${e.impact}')">🔊 اسمعها</button>`;
+  visited.add(v);
+  if(visited.size===eras.length) document.getElementById('btn1show').classList.remove('hidden');
+}
+onSlide(0);
+function showOrderQ(){
+  document.getElementById('btn1show').classList.add('hidden');
+  const box=document.getElementById('orderQBox'); box.classList.remove('hidden');
+  box.innerHTML=`<p class="lead" style="color:var(--ink);font-weight:700;">🔥 رتّب المراحل صح: إيه الترتيب الزمني الصحيح؟</p>`;
+  const opts=[
+    'بداية ظهور الحاسوب ← تسويق الإنترنت تجاريًا ← ظهور الهواتف الذكية ← انتشار الحوسبة السحابية',
+    'تسويق الإنترنت تجاريًا ← بداية ظهور الحاسوب ← انتشار الحوسبة السحابية ← ظهور الهواتف الذكية',
+    'ظهور الهواتف الذكية ← تسويق الإنترنت تجاريًا ← بداية ظهور الحاسوب ← انتشار الحوسبة السحابية',
+    'انتشار الحوسبة السحابية ← ظهور الهواتف الذكية ← تسويق الإنترنت تجاريًا ← بداية ظهور الحاسوب'
+  ];
+  const wrap=document.createElement('div');
+  opts.forEach((o,i)=>{
+    const b=document.createElement('button'); b.className='opt'; b.textContent=o;
+    b.onclick=()=>{
+      Array.from(wrap.children).forEach(x=>x.disabled=true);
+      if(i===0){ b.classList.add('correct'); addGem(3); toast('صح! +٣ جواهر 💎'); }
+      else { b.classList.add('wrong'); wrap.children[0].classList.add('correct'); loseHeart(); toast('غلط.. خسرت قلب 💔'); }
+      const nb=document.createElement('button'); nb.className='btn'; nb.style.marginTop='12px'; nb.textContent='كمّل المرحلة اللي جاية ➡️';
+      nb.onclick=()=>celebrate('مرحلة خط الزمن خلصت! 🕰️',()=>goTo(2));
+      box.appendChild(nb);
+    };
+    wrap.appendChild(b);
+  });
+  box.appendChild(wrap);
+}
+
+/* ---------- STAGE 2: moore ---------- */
+let chipVal=2300, chipYear=1971, clicks=0;
+function renderChip(){
+  document.getElementById('chipNum').textContent=chipVal.toLocaleString('en-US');
+  document.getElementById('chipYear').textContent=chipYear;
+  const grid=document.getElementById('chipDots'); const n=Math.min(180, Math.round(Math.log2(chipVal/2300+1)*18)+4);
+  grid.innerHTML=''; for(let i=0;i<n;i++){const s=document.createElement('span'); grid.appendChild(s);}
+}
+renderChip();
+function doubleChip(){
+  chipVal*=2; chipYear+=2; clicks++; renderChip(); toast('ضاعفت الترانزستورات! 💥');
+  if(clicks>=8){
+    document.getElementById('mooreMsg').textContent='ده قانون مور: عدد الترانزستورات في الشريحة بيتضاعف كل عامين تقريبًا، وده اللي خلّى الأجهزة تصغر وتقوى بسرعة رهيبة سنة بعد سنة.';
+    document.getElementById('btn2show').classList.remove('hidden');
+  }
+}
+function showMooreQ(){
+  document.getElementById('btn2show').classList.add('hidden');
+  const box=document.getElementById('moore2Box'); box.classList.remove('hidden'); box.innerHTML='';
+  const stmts=[
+    {s:'قانون مور قاعدة تجريبية بتقول إن عدد الترانزستورات في الدائرة المتكاملة بيتضاعف تقريبًا كل عامين.',ans:true},
+    {s:'استمرار تصغير المكونات مفيهوش أي تحديات هندسية أو فيزيائية خالص.',ans:false}
+  ];
+  let idx=0;
+  function renderStmt(){
+    box.innerHTML=`<p class="lead" style="color:var(--ink);font-weight:700;">صح ولا غلط؟ (${idx+1}/${stmts.length})</p><p class="lead">${stmts[idx].s}</p>`;
+    const wrap=document.createElement('div'); wrap.className='switch-row';
+    ['✅ صح','❌ غلط'].forEach((label,i)=>{
+      const b=document.createElement('button'); b.className='btn secondary'; b.textContent=label;
+      b.onclick=()=>{
+        const val=(i===0);
+        Array.from(wrap.children).forEach(x=>x.disabled=true);
+        if(val===stmts[idx].ans){ addGem(2); toast('صح! +٢ 💎'); } else { loseHeart(); toast('غلط.. خسرت قلب 💔'); }
+        idx++;
+        const nb=document.createElement('button'); nb.className='btn'; nb.style.marginTop='10px';
+        nb.textContent= idx<stmts.length ? 'السؤال اللي جاي' : 'كمّل المرحلة اللي جاية ➡️';
+        nb.onclick=()=>{ if(idx<stmts.length) renderStmt(); else celebrate('معمل قانون مور خلص! ⚡',()=>goTo(3)); };
+        box.appendChild(nb);
+      };
+      wrap.appendChild(b);
+    });
+    box.appendChild(wrap);
+  }
+  renderStmt();
+}
+
+/* ---------- STAGE 3: city + archive ---------- */
+const spots=[
+ {ic:'📲',name:'شبكات التواصل الاجتماعي',t:'زي فيسبوك وواتساب.. منصات تخلي الناس تتواصل وتتبادل المحتوى مع بعض في أي وقت.'},
+ {ic:'🛍️',name:'التجارة الإلكترونية',t:'تبيع وتشتري أي حاجة أونلاين، مش لازم تنزل تشتري من متجر فعلي بالنقد.'},
+ {ic:'🏠',name:'العمل عن بُعد',t:'تخلص شغلك من مكان تاني غير الشركة باستخدام الإنترنت.'},
+ {ic:'🎓',name:'التعلم عبر الإنترنت',t:'دروسك ومذاكرتك ممكن تاخدها من على النت في أي وقت يناسبك.'},
+ {ic:'💳',name:'الدفع غير النقدي',t:'تدفع بالكارت أو رمز QR من غير ما تحمل فلوس ورق خالص.'}
+];
+let opened=new Set();
+function buildCity(){
+  const city=document.getElementById('city'); city.innerHTML='';
+  spots.forEach((s,i)=>{
+    const d=document.createElement('div'); d.className='hotspot'; d.id='hs'+i;
+    d.innerHTML=`<span class="ic">${s.ic}</span>${s.name}`; d.onclick=()=>openSpot(i); city.appendChild(d);
+  });
+  const rev=document.createElement('div'); rev.className='reveal'; rev.id='cityReveal'; city.appendChild(rev);
+}
+function openSpot(i){
+  document.getElementById('hs'+i).classList.add('on'); opened.add(i);
+  const rev=document.getElementById('cityReveal'); rev.classList.add('show');
+  rev.textContent=`${spots[i].ic} ${spots[i].name}: ${spots[i].t}`; speak(spots[i].name+'. '+spots[i].t);
+  if(opened.size===spots.length){ document.getElementById('btn3show').classList.remove('hidden'); toast('فتحت المدينة كلها! 🏙️'); }
+}
+buildCity();
+function showCityQ(){
+  document.getElementById('btn3show').classList.add('hidden');
+  const box=document.getElementById('cityQBox'); box.classList.remove('hidden');
+  box.innerHTML=`<p class="lead" style="color:var(--ink);font-weight:700;">🔥 وصّل كل مصطلح بمعناه الصح وهات كل الجواهر!</p>`;
+  const terms=document.createElement('div'); terms.className='mrow'; terms.id='arT';
+  const defs=document.createElement('div'); defs.className='mrow'; defs.id='arD';
+  box.appendChild(terms); box.appendChild(defs);
+  const shT=spots.map((p,i)=>({...p,i})).sort(()=>Math.random()-.5);
+  const shD=spots.map((p,i)=>({...p,i})).sort(()=>Math.random()-.5);
+  let sel=null, matched=0;
+  shT.forEach(p=>{const c=document.createElement('div'); c.className='chip'; c.textContent=p.name;
+    c.onclick=()=>{ if(c.classList.contains('ok'))return; Array.from(terms.children).forEach(x=>x.classList.remove('sel')); c.classList.add('sel'); sel={c,i:p.i}; };
+    terms.appendChild(c);});
+  shD.forEach(p=>{const c=document.createElement('div'); c.className='chip'; c.textContent=p.t;
+    c.onclick=()=>{
+      if(c.classList.contains('ok')||!sel) return;
+      if(sel.i===p.i){ sel.c.classList.add('ok'); sel.c.classList.remove('sel'); c.classList.add('ok'); matched++; addGem(1); toast('وصّلتها صح! +١ 💎'); sel=null;
+        if(matched===spots.length){ const nb=document.createElement('button'); nb.className='btn'; nb.style.marginTop='10px'; nb.textContent='كمّل المرحلة اللي جاية ➡️';
+          nb.onclick=()=>celebrate('المدينة الذكية اكتملت! 🏙️',()=>goTo(4)); box.appendChild(nb); }
+      } else { c.classList.add('bad'); sel.c.classList.add('bad'); loseHeart(); toast('مش هو.. خسرت قلب 💔');
+        setTimeout(()=>{c.classList.remove('bad'); sel.c.classList.remove('bad'); sel.c.classList.remove('sel'); sel=null;},400); }
+    };
+    defs.appendChild(c);});
+}
+
+/* ---------- STAGE 4: lab + classify ---------- */
+let labDone={car:false,arvr:false,coin:false};
+function checkLab(){ if(labDone.car&&labDone.arvr&&labDone.coin) document.getElementById('btn4show').classList.remove('hidden'); }
+function carDemo(kind){
+  const out=document.getElementById('carOut');
+  if(kind==='edge'){ out.textContent='⚡ قرار فوري! العربية عالجت بيانات الحساسات جوّاها على طول (Edge Computing) — أسرع وأأمن في المواقف الخطيرة.'; }
+  else { out.textContent='⏳ باعت البيانات للسحابة البعيدة.. مستنية الرد...'; setTimeout(()=>{ out.textContent+=' جه الرد متأخر — ممكن يكون خطير في قرار لازم فوري!'; },900); }
+  labDone.car=true; checkLab();
+}
+function arvr(kind){
+  const out=document.getElementById('arvrOut');
+  out.textContent = kind==='ar' ? '📱 الواقع المعزز (AR): بتفضل شايف العالم الحقيقي، وبتضاف عليه عناصر رقمية فوق.' : '🥽 الواقع الافتراضي (VR): بتدخل بيئة كاملة مولّدة بالكمبيوتر بدل العالم الحقيقي.';
+  labDone.arvr=true; checkLab();
+}
+function flipCoin(kind){
+  const coin=document.getElementById('coin'); const out=document.getElementById('coinOut');
+  coin.classList.remove('spin'); void coin.offsetWidth; coin.classList.add('spin');
+  setTimeout(()=>{
+    if(kind==='bit'){ coin.textContent = Math.random()<0.5?'0':'1'; out.textContent='البت العادي بياخد حالة واحدة بس: أو 0 أو 1.'; }
+    else { coin.textContent='0/1'; out.textContent='الكيوبت بيمزج 0 و1 مع بعض في نفس اللحظة (التراكب الكمومي)، وده سر قوة الحوسبة الكمومية.'; }
+  },500);
+  labDone.coin=true; checkLab();
+}
+function showLabQ(){
+  document.getElementById('btn4show').classList.add('hidden');
+  const box=document.getElementById('labQBox'); box.classList.remove('hidden');
+  box.innerHTML=`<p class="lead" style="color:var(--ink);font-weight:700;">🔥 وصّل كل وصف بالتقنية الصح</p>`;
+  const pairs=[
+    {t:'القيادة الذاتية',d:'تقنية تستخدم الذكاء الاصطناعي لقيادة مركبة بأقل تدخل بشري.'},
+    {t:'الواقع المعزز (AR)',d:'تقنية تضيف معلومات رقمية فوق صور من العالم الحقيقي.'},
+    {t:'الواقع الافتراضي (VR)',d:'تقنية تضع المستخدم داخل بيئة افتراضية مولّدة حاسوبيًا بالكامل.'}
+  ];
+  const terms=document.createElement('div'); terms.className='mrow';
+  const defs=document.createElement('div'); defs.className='mrow';
+  box.appendChild(terms); box.appendChild(defs);
+  const shT=pairs.map((p,i)=>({...p,i})).sort(()=>Math.random()-.5);
+  const shD=pairs.map((p,i)=>({...p,i})).sort(()=>Math.random()-.5);
+  let sel=null, matched=0;
+  shT.forEach(p=>{const c=document.createElement('div'); c.className='chip'; c.textContent=p.t;
+    c.onclick=()=>{ if(c.classList.contains('ok'))return; Array.from(terms.children).forEach(x=>x.classList.remove('sel')); c.classList.add('sel'); sel={c,i:p.i}; };
+    terms.appendChild(c);});
+  shD.forEach(p=>{const c=document.createElement('div'); c.className='chip'; c.textContent=p.d;
+    c.onclick=()=>{
+      if(c.classList.contains('ok')||!sel) return;
+      if(sel.i===p.i){ sel.c.classList.add('ok'); sel.c.classList.remove('sel'); c.classList.add('ok'); matched++; addGem(2); toast('تمام! +٢ 💎'); sel=null;
+        if(matched===pairs.length){ const nb=document.createElement('button'); nb.className='btn'; nb.style.marginTop='10px'; nb.textContent='خلّص المغامرة 🏆';
+          nb.onclick=()=>celebrate('معمل المستقبل اكتمل! أنت بطل خارق حقيقي 🦸⚡',()=>goTo(5)); box.appendChild(nb); }
+      } else { c.classList.add('bad'); sel.c.classList.add('bad'); loseHeart(); toast('مش هو.. خسرت قلب 💔');
+        setTimeout(()=>{c.classList.remove('bad'); sel.c.classList.remove('bad'); sel.c.classList.remove('sel'); sel=null;},400); }
+    };
+    defs.appendChild(c);});
+}
+renderDots();
+</script>
+</body>
+</html>
