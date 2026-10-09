@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>فريق الأبطال الخارقين: كيف يعمل الذكاء الاصطناعي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#1a1040; --bg2:#0d0824; --panel:#fff; --ink:#1a1040; --muted:#5a5478;
+  --red:#ff3b5c; --gold:#ffc23c; --blue:#2f6bff; --purple:#7b4bff; --green:#22c58f;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{margin:0; min-height:100%;
+  background:
+   radial-gradient(#2a1f66 1.2px, transparent 1.2px) 0 0/16px 16px,
+   radial-gradient(1200px 700px at 85% -10%, #3a2586 0%, var(--bg) 45%, var(--bg2) 100%);
+  color:#fff; font-family:'Baloo Bhaijaan 2','Segoe UI',sans-serif;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px); overflow-x:hidden;}
+.wrap{max-width:860px; margin:0 auto; padding:18px 16px 60px;}
+.topbar{position:sticky; top:env(safe-area-inset-top,0px); z-index:6; background:rgba(13,8,36,.92); backdrop-filter:blur(8px); padding:12px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid var(--gold); box-shadow:0 4px 18px rgba(0,0,0,.35);}
+.topbar h1{font-size:15px; margin:0; display:flex; gap:8px; align-items:center; letter-spacing:.3px;}
+.side-hero{position:fixed; top:50%; transform:translateY(-50%); width:160px; text-align:center; z-index:3; display:none;}
+.side-hero.left{left:16px;} .side-hero.right{right:16px;}
+.side-hero .float{animation:floaty 3.2s ease-in-out infinite;}
+.side-hero .ic{font-size:88px; filter:drop-shadow(0 10px 16px rgba(0,0,0,.55));}
+@keyframes floaty{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+.side-hero .banner{margin-top:2px; background:linear-gradient(135deg,var(--gold),var(--red)); color:#1a1040; font-weight:800; font-size:12.5px; line-height:1.5; padding:10px 8px; border-radius:12px; box-shadow:0 8px 18px rgba(0,0,0,.4); border:2px solid #1a1040;}
+@media (min-width:1280px){ .side-hero{display:block;} }
+.card{position:relative;}
+.card:before{content:''; position:absolute; top:-3px; right:24px; left:24px; height:3px; background:linear-gradient(90deg,var(--red),var(--gold)); border-radius:0 0 6px 6px;}
+.badges{display:flex; gap:6px;}
+.bmini{width:27px; height:27px; border-radius:50%; background:#0d0824; border:2px solid #3a2f7a; display:flex; align-items:center; justify-content:center; font-size:14px; opacity:.35;}
+.bmini.on{opacity:1; border-color:var(--gold); box-shadow:0 0 10px rgba(255,194,60,.7);}
+.dots{display:flex; gap:7px; justify-content:center; margin:16px 0 10px;}
+.dot{width:11px; height:11px; border-radius:50%; background:#3a2f7a;}
+.dot.active{background:var(--gold); box-shadow:0 0 0 4px rgba(255,194,60,.25);}
+.dot.done{background:var(--green);}
+.card{background:var(--panel); color:var(--ink); border:3px solid var(--ink); border-radius:20px; padding:22px; margin-bottom:16px; box-shadow:8px 8px 0 var(--purple);}
+h2{font-size:21px; margin:0 0 6px;}
+p.lead{color:var(--muted); font-size:15px; line-height:1.75; margin:0 0 14px;}
+.badge{display:inline-block; background:var(--gold); color:#1a1040; border:2px solid var(--ink); padding:4px 14px; border-radius:999px; font-size:13px; margin-bottom:10px; font-weight:800; transform:rotate(-2deg);}
+.btn{appearance:none; border:2px solid var(--ink); cursor:pointer; font-family:inherit; font-weight:800; font-size:15px; border-radius:14px; padding:12px 20px; color:#1a1040; background:var(--gold); box-shadow:4px 4px 0 var(--ink); transition:transform .08s;}
+.btn:active{transform:translate(4px,4px); box-shadow:0 0 0 var(--ink);}
+.btn.secondary{background:#fff; color:var(--ink);}
+.btn.blue{background:var(--blue); color:#fff;}
+.btn[disabled]{opacity:.4; cursor:not-allowed;}
+.center{text-align:center;}
+.mascot{font-size:54px; line-height:1;}
+.goals{background:#f3f1ff; border:2px dashed var(--purple); border-radius:14px; padding:14px 16px; margin:14px 0;}
+.goals li{margin:6px 0; color:var(--muted);}
+.footer-nav{display:flex; justify-content:space-between; margin-top:16px;}
+.toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--ink); border:2px solid var(--gold); color:#fff; padding:10px 18px; border-radius:999px; font-size:14px; opacity:0; pointer-events:none; transition:opacity .25s; z-index:20;}
+.toast.show{opacity:1;}
+.hidden{display:none !important;}
+.hero-card{background:#f3f1ff; border:2px solid var(--ink); border-radius:16px; padding:18px; text-align:center; margin-bottom:12px;}
+.hero-card .ic{font-size:52px;}
+.hero-card .name{font-weight:800; color:var(--blue); font-size:18px; margin:6px 0 2px;}
+.hero-card .role{font-size:12px; color:var(--purple); margin-bottom:8px;}
+.hero-card .desc{font-size:14.5px; line-height:1.7; color:var(--ink);}
+.hero-card .ex{margin-top:8px; font-size:13px; color:var(--muted); border-top:1px dashed #ccc; padding-top:8px;}
+.note{background:#fff5e0; border-right:4px solid var(--gold); border-radius:10px; padding:10px 14px; margin:10px 0; font-size:13.5px; color:#6a5000;}
+.mission-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin:14px 0;}
+.mission{background:#f3f1ff; border:2px solid var(--ink); border-radius:14px; padding:12px 6px; text-align:center; cursor:pointer; font-size:12.5px; transition:all .15s;}
+.mission .ic{font-size:26px; display:block; margin-bottom:4px;}
+.mission.on{border-color:var(--green); background:#e6fbf3;}
+.reveal{background:#f3f1ff; border-right:4px solid var(--blue); border-radius:10px; padding:12px 14px; margin-top:10px; font-size:14px; color:var(--ink); line-height:1.7; display:none;}
+.reveal.show{display:block;}
+.netbox{background:#f3f1ff; border:2px solid var(--ink); border-radius:16px; padding:10px; margin:14px 0;}
+.node{cursor:pointer; transition:all .2s;}
+.node.on{fill:var(--gold) !important;}
+.tf-row{background:#f9f8ff; border:2px solid #ddd; border-radius:14px; padding:12px 14px; margin-bottom:10px;}
+.tf-row .stmt{font-size:14.5px; margin-bottom:8px; color:var(--ink);}
+.tf-btns button{margin-left:6px; padding:7px 16px; border-radius:10px; border:2px solid var(--ink); background:#fff; cursor:pointer; font-family:inherit; font-weight:700;}
+.tf-fb{font-size:13.5px; margin-top:8px; display:none; padding:8px 10px; border-radius:8px;}
+.tf-fb.show{display:block;}
+.tf-fb.correct{background:#e6fbf3; color:#0a7a52;}
+.tf-fb.wrong{background:#ffeef0; color:#a3123a;}
+.mrow{display:flex; gap:8px; flex-wrap:wrap; margin:10px 0;}
+.chip{flex:1 1 45%; min-width:120px; background:#f3f1ff; border:2px solid var(--ink); border-radius:12px; padding:10px 8px; text-align:center; cursor:pointer; font-size:13px;}
+.chip.sel{border-color:var(--gold); background:#fff5e0;}
+.chip.ok{border-color:var(--green); background:#e6fbf3; opacity:.6; cursor:default;}
+.chip.bad{animation:shake .35s;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+textarea{width:100%; min-height:80px; border-radius:12px; border:2px solid var(--ink); padding:10px; font-family:inherit; font-size:14px;}
+.stars{font-size:40px; margin:14px 0;}
+</style>
+</head>
+<body>
+<div class="side-hero left"><div class="float"><div class="ic">🦸‍♂️</div></div><div class="banner">فكّر زي بطل خارق.. كل معلومة قوة جديدة! ⚡🧠</div></div>
+<div class="side-hero right"><div class="float"><div class="ic" style="display:inline-block; transform:scaleX(-1);">🦸‍♀️</div></div><div class="banner">إنت قادر تفهم الذكاء الاصطناعي بسهولة! ✨🚀</div></div>
+<div class="topbar">
+  <h1>🦸 <span id="topName">فريق الأبطال الخارقين</span></h1>
+  <div class="badges" id="badgeBar">
+    <div class="bmini" id="b1" title="سلسلة القوى">⚡</div>
+    <div class="bmini" id="b2" title="المهام السرية">🕵️</div>
+    <div class="bmini" id="b3" title="الشبكة الخارقة">🕸️</div>
+    <div class="bmini" id="b4" title="المحقق الخارق">🔍</div>
+  </div>
+</div>
+<div class="wrap">
+  <div class="dots" id="dots"></div>
+
+  <!-- NAME ENTRY -->
+  <section id="s-name" class="card center">
+    <div class="mascot">🦸‍♂️🦸‍♀️</div>
+    <h2>إزيك! أنا الكابتن ذكاء</h2>
+    <p class="lead">قبل ما نجمع الفريق، قولّي اسمك عشان أنادّيك بيه طول المهمة.</p>
+    <input type="text" id="nameInput" style="width:100%; padding:13px 16px; border-radius:12px; border:2px solid var(--ink); font-family:inherit; font-size:16px;" placeholder="اكتب اسمك هنا...">
+    <div style="height:14px"></div>
+    <button class="btn" onclick="saveName()">يلا بينا ⚡</button>
+  </section>
+
+  <!-- INTRO -->
+  <section id="s-intro" class="card center hidden">
+    <div class="mascot">🦸‍♂️🦸‍♀️</div>
+    <div class="badge">الدرس ٢-١</div>
+    <h2 id="introTitle">كيف يعمل الذكاء الاصطناعي</h2>
+    <p class="lead">أنا الكابتن ذكاء، وده فريقي من الأبطال الخارقين! كل بطل فينا عنده قوة مختلفة جوه عالم الذكاء الاصطناعي. تعال اعرفنا واحد واحد وشوف إزاي قوانا بترتبط ببعض.</p>
+    <div class="goals">
+      <div style="color:var(--blue); font-weight:700; margin-bottom:6px;">بعد اللعبة هتقدر:</div>
+      <ul style="margin:0; padding-right:20px;">
+        <li>تعرّف الذكاء الاصطناعي، وتميّز بينه وبين التعلم الآلي والتعلم العميق والذكاء الاصطناعي التوليدي</li>
+        <li>تشرح العلاقة بين المفاهيم دي بأمثلة من عندك</li>
+        <li>تفهم إزاي الشبكة العصبية بتتعلم من البيانات</li>
+      </ul>
+    </div>
+    <button class="btn" onclick="goTo(1)">يلا نجمع الفريق ⚡</button>
+  </section>
+
+  <!-- STAGE 1: power chain -->
+  <section id="s-1" class="card hidden">
+    <div class="badge">المرحلة ١ من ٤</div>
+    <h2>⚡ سلسلة القوى الخارقة</h2>
+    <p class="lead">دوس "القوة اللي بعدها" وقابل كل بطل في السلسلة، من الأوسع للأكثر تخصصًا.</p>
+    <div id="heroScene"></div>
+    <div class="center"><button class="btn blue" id="nextHero" onclick="nextHero()">القوة اللي بعدها ⚡</button></div>
+    <div class="note hidden" id="containNote">📌 ملحوظة مهمة: العلاقة دي تعليمية مبسطة، مش تسلسل احتواء صارم لازم يتحقق في كل حالة — يعني مش كل تطبيق ذكاء اصطناعي لازم يمر بكل الطبقات دي.</div>
+    <div class="footer-nav">
+      <span></span>
+      <button class="btn hidden" id="btn1" onclick="goTo(2)">التالي ⬅️</button>
+    </div>
+  </section>
+
+  <!-- STAGE 2: secret missions -->
+  <section id="s-2" class="card hidden">
+    <div class="badge">المرحلة ٢ من ٤</div>
+    <h2>🕵️ مهام سرية في هاتفك</h2>
+    <p class="lead">هاتفك وحاسوبك بيعملوا مهام محتاجة "ذكاء" من غير ما تحس. دوس على كل مهمة واكتشف السر وراها.</p>
+    <div class="mission-grid" id="missions"></div>
+    <div class="reveal" id="missionReveal"></div>
+    <div class="footer-nav">
+      <span></span>
+      <button class="btn hidden" id="btn2" onclick="goTo(3)">التالي ⬅️</button>
+    </div>
+  </section>
+
+  <!-- STAGE 3: neural network -->
+  <section id="s-3" class="card hidden">
+    <div class="badge">المرحلة ٣ من ٤</div>
+    <h2>🕸️ ابني شبكتك العصبية الخارقة</h2>
+    <p class="lead">دوس على كل دايرة في الشبكة عشان تفهم كل طبقة بتعمل إيه. الشبكة العصبية دي أساس التعلم العميق.</p>
+    <div class="netbox">
+      <svg viewBox="0 0 300 180" width="100%">
+        <line x1="55" y1="40" x2="150" y2="30" stroke="#c9c3f5" stroke-width="2"/>
+        <line x1="55" y1="40" x2="150" y2="90" stroke="#c9c3f5" stroke-width="2"/>
+        <line x1="55" y1="40" x2="150" y2="150" stroke="#c9c3f5" stroke-width="2"/>
+        <line x1="55" y1="90" x2="150" y2="30" stroke="#c9c3f5" stroke-width="2"/>
+        <line x1="55" y1="90" x2="150" y2="90" stroke="#c9c3f5" stroke-width="2"/>
+        <line x1="55" y1="90" x2="150" y2="150" stroke="#c9c3f5" stroke-width="2"/>
+        <line x1="55" y1="140" x2="150" y2="30" stroke="#c9c3f5" stroke-width="2"/>
+        <line x1="55" y1="140" x2="150" y2="90" stroke="#c9c3f5" stroke-width="2"/>
+        <line x1="55" y1="140" x2="150" y2="150" stroke="#c9c3f5" stroke-width="2"/>
+        <line x1="150" y1="30" x2="245" y2="60" stroke="#c9c3f5" stroke-width="2"/>
+        <line x1="150" y1="90" x2="245" y2="60" stroke="#c9c3f5" stroke-width="2"/>
+        <line x1="150" y1="150" x2="245" y2="60" stroke="#c9c3f5" stroke-width="2"/>
+        <line x1="150" y1="30" x2="245" y2="120" stroke="#c9c3f5" stroke-width="2"/>
+        <line x1="150" y1="90" x2="245" y2="120" stroke="#c9c3f5" stroke-width="2"/>
+        <line x1="150" y1="150" x2="245" y2="120" stroke="#c9c3f5" stroke-width="2"/>
+        <circle class="node" data-l="in" cx="55" cy="40" r="12" fill="#2f6bff" onclick="tapNode('in')"/>
+        <circle class="node" data-l="in" cx="55" cy="90" r="12" fill="#2f6bff" onclick="tapNode('in')"/>
+        <circle class="node" data-l="in" cx="55" cy="140" r="12" fill="#2f6bff" onclick="tapNode('in')"/>
+        <circle class="node" data-l="hid" cx="150" cy="30" r="12" fill="#7b4bff" onclick="tapNode('hid')"/>
+        <circle class="node" data-l="hid" cx="150" cy="90" r="12" fill="#7b4bff" onclick="tapNode('hid')"/>
+        <circle class="node" data-l="hid" cx="150" cy="150" r="12" fill="#7b4bff" onclick="tapNode('hid')"/>
+        <circle class="node" data-l="out" cx="245" cy="60" r="12" fill="#ff3b5c" onclick="tapNode('out')"/>
+        <circle class="node" data-l="out" cx="245" cy="120" r="12" fill="#ff3b5c" onclick="tapNode('out')"/>
+        <text x="55" y="20" text-anchor="middle" font-size="10" fill="#5a5478">الإدخال</text>
+        <text x="150" y="15" text-anchor="middle" font-size="10" fill="#5a5478">مخفية</text>
+        <text x="245" y="45" text-anchor="middle" font-size="10" fill="#5a5478">الإخراج</text>
+      </svg>
+    </div>
+    <div class="reveal" id="netReveal"></div>
+    <div class="footer-nav">
+      <span></span>
+      <button class="btn hidden" id="btn3" onclick="goTo(4)">التالي ⬅️</button>
+    </div>
+  </section>
+
+  <!-- STAGE 4: detective challenge -->
+  <section id="s-4" class="card hidden">
+    <div class="badge">المرحلة ٤ من ٤</div>
+    <h2>🔍 تحدي المحقق الخارق</h2>
+    <p class="lead">حدد كل عبارة صح ولا غلط، وشوف تفسير المحقق فورًا.</p>
+    <div id="tfBox"></div>
+
+    <h2 style="margin-top:18px;">🗂️ أرشيف الأبطال</h2>
+    <p class="lead">وصّل كل وصف بالبطل (المصطلح) المناسب له.</p>
+    <div class="mrow" id="archTerms"></div>
+    <div class="mrow" id="archDefs"></div>
+    <div class="reveal show" style="margin-top:6px;" id="archMsg">جمّع كل الأزواج الصح!</div>
+
+    <h2 style="margin-top:18px;">🏆 تحدي الأسطورة (٦ درجات)</h2>
+    <p class="lead">حلّل العلاقة بين الذكاء الاصطناعي والتعلم الآلي والتعلم العميق والذكاء الاصطناعي التوليدي، واذكر مثالًا واحدًا لكل منها. اكتب إجابتك الأول.</p>
+    <textarea id="essayBox" placeholder="اكتب إجابتك هنا..."></textarea>
+    <div class="center" style="margin-top:10px;"><button class="btn secondary" onclick="showModel()">شوف إجابة الكابتن ذكاء 🦸</button></div>
+    <div class="reveal" id="modelAnswer">الذكاء الاصطناعي هو المجال الأوسع: أنظمة تنفذ مهامًا تحتاج ذكاء بشري (مثال: التعرف على الكلام). التعلم الآلي فرع منه يتعلم من البيانات بدل قواعد ثابتة (مثال: تصنيف الرسائل المزعجة). التعلم العميق أسلوب داخل التعلم الآلي يعتمد على شبكات عصبية متعددة الطبقات (مثال: تحليل الصور). الذكاء الاصطناعي التوليدي أكثرهم تخصصًا، وغالبًا يعتمد على التعلم العميق لتوليد محتوى جديد (مثال: ChatGPT). العلاقة دي فئات متداخلة تعليميًا، مش تسلسل احتواء صارم دايمًا.</div>
+
+    <div class="footer-nav" style="margin-top:16px;">
+      <span></span>
+      <button class="btn" id="btn4" onclick="goTo(5)" disabled>خلّصت المهمة! 🎉</button>
+    </div>
+  </section>
+
+  <!-- END -->
+  <section id="s-end" class="card center hidden">
+    <div class="mascot">🦸🎉</div>
+    <h2 id="endTitle">ألف مبروك يا بطل!</h2>
+    <p class="lead">جمعت الفريق كله وفهمت إزاي الذكاء الاصطناعي والتعلم الآلي والتعلم العميق والذكاء الاصطناعي التوليدي بيشتغلوا مع بعض.</p>
+    <div class="stars">🏅🏅🏅🏅</div>
+    <button class="btn secondary" onclick="location.reload()">ابدأ المهمة تاني 🔁</button>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+let stage=0; const totalStages=4; let userName='بطل';
+function toast(m){const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),1500);}
+function setBadge(id){document.getElementById(id).classList.add('on');}
+function saveName(){
+  const v=document.getElementById('nameInput').value.trim();
+  userName = v || 'بطل';
+  document.getElementById('topName').textContent = userName + ' 🦸';
+  document.getElementById('introTitle').textContent = 'يلا يا '+userName+'! كيف يعمل الذكاء الاصطناعي';
+  document.getElementById('s-name').classList.add('hidden');
+  document.getElementById('s-intro').classList.remove('hidden');
+}
+function renderDots(){const d=document.getElementById('dots'); d.innerHTML='';
+  for(let i=1;i<=totalStages;i++){const s=document.createElement('div'); s.className='dot'+(i<stage?' done':(i===stage?' active':'')); d.appendChild(s);} }
+function goTo(n){
+  document.querySelectorAll('#s-intro,#s-1,#s-2,#s-3,#s-4,#s-end').forEach(e=>e.classList.add('hidden'));
+  stage=n; renderDots();
+  if(n<=totalStages) document.getElementById('s-'+n).classList.remove('hidden');
+  else { document.getElementById('endTitle').textContent='ألف مبروك يا '+userName+'! 🏆'; document.getElementById('s-end').classList.remove('hidden'); }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------- STAGE 1 ---------- */
+const heroes=[
+ {ic:'🦸‍♂️',name:'كابتن ذكاء',role:'الذكاء الاصطناعي (AI)',desc:'مجال واسع يضم أنظمة حاسوبية تقدر تنفّذ مهام تحتاج ذكاء بشري: تتعلم من البيانات، تتنبأ، تتعرف على الأنماط، تاخد قرارات، وتقدّم محتوى.',ex:'مثال: التعرف على الكلام والصور، والترجمة.'},
+ {ic:'⚡',name:'القائد الآلي',role:'التعلم الآلي (ML)',desc:'فرع من الذكاء الاصطناعي، فيه النماذج تتعلم من البيانات نفسها عشان تعمل تنبؤات أو تصنيفات أو تدعم قرارات، بدل ما كل قاعدة تتكتب يدويًا.',ex:'مثال: تصنيف الرسائل المزعجة، توصية المنتجات.'},
+ {ic:'🧠',name:'الدكتور العميق',role:'التعلم العميق (DL)',desc:'أسلوب من أساليب التعلم الآلي بيعتمد على شبكات عصبية متعددة الطبقات، وبيقدر يتعلم أنماط وتمثيلات معقدة جدًا من البيانات.',ex:'مثال: تحليل الصور، والتعرف على الكلام. غالبًا محتاج بيانات كبيرة عشان يبقى موثوق.'},
+ {ic:'🕸️',name:'مهندس الشبكة',role:'الشبكة العصبية الاصطناعية (ANN)',desc:'نموذج حاسوبي مستوحى بصورة مبسطة من فكرة ترابط الخلايا العصبية، بيتكوّن من وحدات مترابطة تتغيّر أوزانها أثناء التدريب عشان تتعلم أنماط البيانات.',ex:'دي القوة اللي الدكتور العميق بيستخدمها جوه شغله!'},
+ {ic:'✨',name:'الساحر التوليدي',role:'الذكاء الاصطناعي التوليدي (GenAI)',desc:'أنظمة تنشئ محتوى جديد تمامًا: نصوص، صور، برمجيات، صوت.. اعتمادًا على الأنماط اللي اتعلمتها من بيانات التدريب. غالبًا بتعتمد على نماذج التعلم العميق.',ex:'مثال: ChatGPT، وأدوات توليد الصور.'}
+];
+let heroIdx=0;
+function renderHero(){
+  const h=heroes[heroIdx];
+  document.getElementById('heroScene').innerHTML=`<div class="hero-card"><div class="ic">${h.ic}</div><div class="name">${h.name}</div><div class="role">${h.role}</div><div class="desc">${h.desc}</div><div class="ex">${h.ex}</div></div>`;
+  if(heroIdx===heroes.length-1){
+    document.getElementById('nextHero').classList.add('hidden');
+    document.getElementById('containNote').classList.remove('hidden');
+    document.getElementById('btn1').classList.remove('hidden');
+    setBadge('b1');
+  }
+}
+function nextHero(){ if(heroIdx<heroes.length-1){ heroIdx++; renderHero(); toast('بطل جديد انضم للفريق! 🦸'); } }
+renderHero();
+
+/* ---------- STAGE 2 ---------- */
+const missions=[
+ {ic:'📧',name:'فلترة الرسائل',t:'لما الهاتف يفلتر الرسائل المزعجة، ده تعلم آلي: النموذج اتعلم من آلاف الرسائل القديمة إيه اللي مزعج وإيه اللي مش مزعج، وبيطبّق اللي اتعلمه على الرسائل الجديدة.'},
+ {ic:'🎵',name:'توصية أغنية',t:'لما التطبيق يرشحلك أغنية جديدة، ده كمان تعلم آلي: بيحلل الأنماط في تسمعك القديم عشان يتنبأ بحاجة تعجبك.'},
+ {ic:'🌐',name:'ترجمة نص',t:'ترجمة النصوص بتعتمد على نماذج اتعلمت من ملايين الجمل المترجمة قبل كده، فبتتعرف على الأنماط اللغوية وتطبّقها على نص جديد.'}
+];
+let opened2=new Set();
+function buildMissions(){
+  const box=document.getElementById('missions'); box.innerHTML='';
+  missions.forEach((m,i)=>{
+    const d=document.createElement('div'); d.className='mission'; d.id='ms'+i;
+    d.innerHTML=`<span class="ic">${m.ic}</span>${m.name}`;
+    d.onclick=()=>openMission(i);
+    box.appendChild(d);
+  });
+}
+function openMission(i){
+  document.getElementById('ms'+i).classList.add('on');
+  opened2.add(i);
+  const rev=document.getElementById('missionReveal');
+  rev.classList.add('show'); rev.textContent=missions[i].t;
+  if(opened2.size===missions.length){ document.getElementById('btn2').classList.remove('hidden'); setBadge('b2'); toast('كشفت كل المهام السرية! 🕵️'); }
+}
+buildMissions();
+
+/* ---------- STAGE 3 ---------- */
+let netTouched=new Set();
+const netTexts={
+ in:'طبقة الإدخال: هنا بتدخل بيانات جديدة للشبكة (زي بكسلات صورة أو كلمات نص).',
+ hid:'الطبقة المخفية: هنا العُقد المترابطة بتعالج البيانات وتبني أنماطًا معقدة أثناء التدريب — كل عقدة بتغيّر وزنها عشان تتعلم أفضل.',
+ out:'طبقة الإخراج: هنا الشبكة بتطلعلك النتيجة النهائية، زي "دي قطة" أو "الرسالة دي مزعجة".'
+};
+function tapNode(l){
+  document.querySelectorAll('.node[data-l="'+l+'"]').forEach(n=>n.classList.add('on'));
+  netTouched.add(l);
+  const rev=document.getElementById('netReveal');
+  rev.classList.add('show'); rev.textContent=netTexts[l];
+  if(netTouched.size===3){
+    setTimeout(()=>{ rev.textContent+=' — كده بنيت شبكة عصبية بسيطة! دي بالظبط القوة اللي الدكتور العميق (التعلم العميق) بيستخدمها.'; },300);
+    document.getElementById('btn3').classList.remove('hidden'); setBadge('b3'); toast('الشبكة اشتغلت! 🕸️');
+  }
+}
+
+/* ---------- STAGE 4 ---------- */
+const tfs=[
+ {s:'التعلم الآلي هو إحدى التقنيات اللي بتخلي الذكاء الاصطناعي يشتغل.',ans:true,why:'صح: التعلم الآلي فرع من تقنيات التعلم اللي بتخلي أنظمة الذكاء الاصطناعي تعمل.'},
+ {s:'التعلم العميق تقنية مختلفة تمامًا عن التعلم الآلي ومالهاش علاقة بيه.',ans:false,why:'خطأ: التعلم العميق هو أسلوب متقدم *ضمن* التعلم الآلي نفسه، مش تقنية منفصلة خالص.'},
+ {s:'الذكاء الاصطناعي التوليدي تقنية بتستخدم التعلم العميق عشان تولّد بيانات جديدة.',ans:true,why:'صح: ده بالظبط وصف الذكاء الاصطناعي التوليدي.'},
+ {s:'الذكاء الاصطناعي والتعلم الآلي ليهم نفس المعنى بالظبط.',ans:false,why:'خطأ: الذكاء الاصطناعي مفهوم أوسع، والتعلم الآلي واحد بس من التقنيات اللي بتحقق أهدافه.'}
+];
+function buildTF(){
+  const box=document.getElementById('tfBox'); box.innerHTML='';
+  tfs.forEach((q,i)=>{
+    const row=document.createElement('div'); row.className='tf-row';
+    row.innerHTML=`<div class="stmt">${i+1}. ${q.s}</div>
+      <div class="tf-btns">
+        <button onclick="answerTF(${i},true,this)">✅ صح</button>
+        <button onclick="answerTF(${i},false,this)">❌ غلط</button>
+      </div>
+      <div class="tf-fb" id="tffb${i}"></div>`;
+    box.appendChild(row);
+  });
+}
+let tfAnswered=new Set();
+function answerTF(i,val,btn){
+  if(tfAnswered.has(i)) return;
+  tfAnswered.add(i);
+  Array.from(btn.parentElement.children).forEach(b=>b.disabled=true);
+  const fb=document.getElementById('tffb'+i);
+  fb.classList.add('show');
+  const correct = val===tfs[i].ans;
+  fb.classList.add(correct?'correct':'wrong');
+  fb.textContent=(correct?'🎯 ظبطت! ':'🤔 مش بالظبط. ')+tfs[i].why;
+  checkStage4Done();
+}
+
+const archPairs=[
+ {t:'الذكاء الاصطناعي (AI)',d:'المصطلح العام للأنظمة الحاسوبية القادرة على التعلم والتنبؤ والتعرف وتوليد المحتوى.'},
+ {t:'التعلم الآلي (ML)',d:'فرع من الذكاء الاصطناعي تتعلم فيه النماذج أنماطًا من البيانات نفسها.'},
+ {t:'التعلم العميق (DL)',d:'أسلوب تعلم آلي يعتمد على شبكات عصبية متعددة الطبقات.'},
+ {t:'الذكاء الاصطناعي التوليدي (GenAI)',d:'أنظمة ذكاء اصطناعي تُنشئ محتوى جديدًا مثل النصوص والصور.'}
+];
+let selTerm=null, matched=0;
+function buildArchive(){
+  const terms=document.getElementById('archTerms'), defs=document.getElementById('archDefs');
+  const shT=archPairs.map((p,i)=>({...p,i})).sort(()=>Math.random()-.5);
+  const shD=archPairs.map((p,i)=>({...p,i})).sort(()=>Math.random()-.5);
+  shT.forEach(p=>{const c=document.createElement('div'); c.className='chip'; c.textContent=p.t; c.onclick=()=>pickT(c,p.i); terms.appendChild(c);});
+  shD.forEach(p=>{const c=document.createElement('div'); c.className='chip'; c.textContent=p.d; c.onclick=()=>pickD(c,p.i); defs.appendChild(c);});
+}
+function pickT(el,i){ if(el.classList.contains('ok'))return; document.querySelectorAll('#archTerms .chip').forEach(c=>c.classList.remove('sel')); el.classList.add('sel'); selTerm={el,i}; }
+function pickD(el,i){
+  if(el.classList.contains('ok')||!selTerm) return;
+  if(i===selTerm.i){
+    selTerm.el.classList.add('ok'); selTerm.el.classList.remove('sel'); el.classList.add('ok'); matched++;
+    toast('وصّلت البطل بقوته الصح! 🗂️'); selTerm=null;
+    if(matched===archPairs.length){ document.getElementById('archMsg').textContent='جمّعت الأرشيف بالكامل! كل بطل في مكانه الصح.'; checkStage4Done(); }
+  } else {
+    el.classList.add('bad'); selTerm.el.classList.add('bad');
+    setTimeout(()=>{el.classList.remove('bad'); selTerm.el.classList.remove('bad'); selTerm.el.classList.remove('sel'); selTerm=null;},400);
+    toast('مش هو ده.. جرّب تاني');
+  }
+}
+function showModel(){ document.getElementById('modelAnswer').classList.add('show'); checkStage4Done(); }
+function checkStage4Done(){
+  if(tfAnswered.size===tfs.length && matched===archPairs.length && document.getElementById('modelAnswer').classList.contains('show')){
+    document.getElementById('btn4').disabled=false; setBadge('b4'); toast('خلّصت تحدي المحقق الخارق! 🔍');
+  }
+}
+buildTF(); buildArchive();
+renderDots();
+</script>
+</body>
+</html>
